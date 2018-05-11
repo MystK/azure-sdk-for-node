@@ -438,9 +438,13 @@ class ServiceClient {
     if (libPath) {
       let packageJsonPath = path.join(libPath, '..', 'package.json');
       if (fs.existsSync(packageJsonPath)) {
-        let data = require(packageJsonPath);
-        packageJsonInfo.name = data.name;
-        packageJsonInfo.version = data.version;
+        try {
+          let data = require(packageJsonPath);
+          packageJsonInfo.name = data.name;
+          packageJsonInfo.version = data.version;
+        } catch (err) {
+          // something went wrong while trying to require the package.json. let's just move on since it's optional anyways.
+        }
       }
     }
 
